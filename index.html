@@ -128,10 +128,17 @@
     .menu{ display: flex; gap: 6px; align-items: center; }
     .menu a{
       color: var(--muted); font-weight: 500; font-size: 14px;
-      padding: 8px 14px; border-radius: 999px; transition: all .2s;
-      font-family: var(--mono);
+      padding: 8px 14px; border-radius: 999px; transition: all .25s ease;
+      font-family: var(--mono); border: 1px solid transparent;
     }
     .menu a:hover{ color: var(--text); background: color-mix(in oklab, var(--text) 6%, transparent); }
+    .menu a.active{
+      color: var(--brand);
+      background: color-mix(in oklab, var(--brand) 16%, transparent);
+      border-color: color-mix(in oklab, var(--brand) 38%, transparent);
+      font-weight: 700;
+      box-shadow: 0 0 16px color-mix(in oklab, var(--brand) 20%, transparent);
+    }
     .btn{
       display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 16px; border-radius: 999px;
@@ -482,68 +489,109 @@
       flex-shrink: 0;
     }
 
-    /* ============ Reports (embedded iframes) ============ */
+    /* ============ Reports (embedded iframes / static thumbnails) ============ */
     .reports-grid{
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;
+      display: flex; flex-direction: column; gap: 24px;
     }
     .report-card{
-      background: var(--card); backdrop-filter: blur(10px);
+      background: var(--card); backdrop-filter: blur(14px);
       border: 1px solid var(--line); border-radius: 20px;
-      padding: 8px; position: relative; overflow: hidden;
-      transition: all .35s;
-      display: flex; flex-direction: column;
+      padding: 16px; position: relative; overflow: hidden;
+      transition: all .35s ease;
+      display: flex; flex-direction: row; align-items: center;
+      gap: 20px;
     }
     .report-card:hover{
-      border-color: color-mix(in oklab, var(--brand) 45%, transparent);
-      transform: translateY(-4px);
-      box-shadow: 0 25px 50px rgba(0,0,0,.35);
+      border-color: color-mix(in oklab, var(--brand) 50%, transparent);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 45px rgba(0,0,0,.4);
     }
     .report-frame-wrap{
-      position: relative; aspect-ratio: 16/10; border-radius: 14px; overflow: hidden;
-      background: var(--bg-2); border: 1px solid var(--line);
+      position: relative; border-radius: 12px; overflow: hidden;
+      background: #090a10; border: 1px solid var(--line-strong);
+      width: 480px; flex-shrink: 0; aspect-ratio: 1920 / 912;
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+      display: block;
     }
     .report-frame-wrap iframe{
       width: 200%; height: 200%; border: 0; background: #fff;
       transform: scale(.5); transform-origin: 0 0;
       pointer-events: none;
+      position: absolute; top: 0; left: 0;
     }
-    .report-frame-wrap.placeholder{
-      display: grid; place-items: center; padding: 20px; text-align: center;
+    .report-frame-wrap img{
+      width: 100%; height: 100%; object-fit: fill;
+      display: block; border-radius: 11px;
+      transition: transform .4s ease;
     }
-    .report-frame-wrap.placeholder .ph-icon{ font-size: 44px; margin-bottom: 10px; opacity: .5; }
-    .report-frame-wrap.placeholder .ph-text{ font-family: var(--mono); font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .report-card:hover .report-frame-wrap img{ transform: scale(1.025); }
     .report-thumb-badge{
-      position: absolute; top: 12px; left: 12px; z-index: 2;
-      padding: 4px 10px; border-radius: 6px;
-      background: rgba(6,7,12,.75); backdrop-filter: blur(8px);
+      position: absolute; top: 10px; left: 10px; z-index: 2;
+      padding: 3px 9px; border-radius: 6px;
+      background: rgba(6,7,12,.85); backdrop-filter: blur(8px);
       border: 1px solid var(--line-strong);
-      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      font-family: var(--mono); font-size: 9px; font-weight: 700;
       color: var(--brand-3); letter-spacing: .08em; text-transform: uppercase;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 5px;
     }
     .report-thumb-badge::before{
       content: ""; width: 5px; height: 5px; border-radius: 50%;
       background: var(--brand-3);
       animation: pulse 2s ease-in-out infinite;
     }
-    .report-body{ padding: 18px 14px 14px; flex: 1; display: flex; flex-direction: column; }
-    .report-body h3{ margin: 0 0 6px; font-size: 17px; }
-    .report-body p{ margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
-    .report-tags{ margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .report-body{
+      padding: 4px 8px; flex: 1; display: flex; flex-direction: column;
+      justify-content: center; min-width: 0;
+    }
+    .report-body h3{ margin: 0 0 6px; font-size: 18px; font-weight: 700; color: var(--text); }
+    .report-body .report-desc{ margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    
+    .report-section{
+      border-left: 2px solid color-mix(in oklab, var(--brand) 45%, transparent);
+      padding-left: 10px; margin-bottom: 10px;
+    }
+    .report-section-head{
+      display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+    }
+    .rs-ico{ font-size: 12px; }
+    .rs-label{
+      font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+      color: var(--brand); text-transform: uppercase; letter-spacing: .08em;
+    }
+    .rs-text{ margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .rs-text strong{ color: var(--text); }
+    .rs-list{ margin: 0 0 4px; padding-left: 16px; }
+    .rs-list li{ font-size: 12px; color: var(--muted); line-height: 1.45; margin-bottom: 2px; }
+    .rs-list li strong{ color: var(--text); }
+    .rs-howto{ margin: 0; font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .rs-howto-label{ font-weight: 700; color: var(--text); }
+
+    .report-footer{
+      margin-top: 14px; display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .report-tags{ display: flex; gap: 6px; flex-wrap: wrap; }
     .report-cta{
-      margin-top: 16px; width: 100%;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 16px; border-radius: 12px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 20px; border-radius: 10px;
       background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #06070c; font-weight: 700; font-size: 14px;
+      color: #06070c; font-weight: 700; font-size: 13px;
       border: 0; cursor: pointer; transition: all .25s;
-      font-family: var(--sans);
+      font-family: var(--sans); white-space: nowrap;
     }
     .report-cta:hover{
-      transform: translateY(-2px); box-shadow: 0 12px 30px rgba(34,211,238,.35);
+      transform: translateY(-2px); box-shadow: 0 10px 24px rgba(34,211,238,.35);
     }
     .report-cta svg{ transition: transform .25s; }
     .report-cta:hover svg{ transform: translateX(3px); }
+
+    @media (max-width: 980px){
+      .report-card{ flex-direction: column; align-items: stretch; }
+      .report-frame-wrap{ width: 100%; aspect-ratio: 1920 / 912; }
+      .report-body{ padding: 14px 4px 4px; }
+      .report-footer{ flex-direction: column; align-items: stretch; }
+      .report-cta{ justify-content: center; width: 100%; }
+    }
 
     /* Fullscreen report viewer (dedicated view) */
     .report-viewer{
@@ -1162,6 +1210,13 @@
         const val = el.getAttribute('data-' + lang + '-ph');
         if (val !== null) el.setAttribute('placeholder', val);
       });
+      // Handle insight lists
+      document.querySelectorAll('[data-vi-list]').forEach(el => {
+        try {
+          const list = JSON.parse(el.getAttribute('data-' + lang + '-list') || '[]');
+          el.innerHTML = list.map(t => `<li>${t}</li>`).join('');
+        } catch(e) {}
+      });
       langBtn.querySelectorAll('span').forEach(s => {
         s.classList.toggle('active', s.dataset.lang === lang);
       });
@@ -1188,6 +1243,44 @@
       const h = document.documentElement;
       sp.style.width = ((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100) + '%';
     });
+
+    // ===== Active Navigation Link Highlighting on Scroll =====
+    const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
+    const pageSections = Array.from(menuLinks).map(link => {
+      const targetId = link.getAttribute('href').slice(1);
+      return document.getElementById(targetId);
+    }).filter(Boolean);
+
+    function highlightActiveNav() {
+      const scrollPos = window.scrollY + 140;
+      let currentId = '';
+
+      pageSections.forEach(sec => {
+        const top = sec.offsetTop;
+        const height = sec.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          currentId = sec.id;
+        }
+      });
+
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        if (pageSections.length > 0) {
+          currentId = pageSections[pageSections.length - 1].id;
+        }
+      }
+
+      menuLinks.forEach(link => {
+        const href = link.getAttribute('href').slice(1);
+        if (href === currentId) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightActiveNav, { passive: true });
+    window.addEventListener('load', highlightActiveNav);
 
     // ===== Cursor spotlight =====
     const spot = document.getElementById('spotlight');
@@ -1399,19 +1492,40 @@
         title_en: "Finance, Accounting & Cashflow",
         desc_vi: "Dashboard tổng quan tài chính doanh nghiệp: doanh thu, chi phí, lợi nhuận và dòng tiền hoạt động.",
         desc_en: "Corporate finance dashboard: revenue, cost, profit, and operational cashflow.",
+        problem_vi: "Ban lãnh đạo cần một <strong>trung tâm kiểm soát tài chính</strong> để nắm bắt sức khỏe doanh nghiệp theo thời gian thực — không phải chờ đến cuối tháng mới có báo cáo Excel. Yêu cầu cốt lõi: hợp nhất <strong>Bảng Cân đối kế toán — P&L — Dòng tiền</strong> vào một dashboard duy nhất có khả năng drill-down theo thời gian và đơn vị.",
+        problem_en: "Leadership needed a <strong>financial control tower</strong> to see business health in real time — not wait for end-of-month Excel reports. High-level requirement: consolidate <strong>Balance Sheet — P&L — Cashflow</strong> into a single dashboard with time & unit drill-down.",
+        insights_vi: ["So sánh kỳ hiện tại với kỳ trước để phát hiện <strong>bất thường tài chính</strong> sớm","Theo dõi dòng tiền hoạt động → dự báo áp lực thanh khoản 1–2 kỳ tới","Phân tích cơ cấu chi phí → tìm dư địa tối ưu hóa chi phí cố định"],
+        insights_en: ["Compare current vs prior period to spot <strong>financial anomalies</strong> early","Track operating cashflow → forecast liquidity pressure 1-2 periods ahead","Analyze cost structure → find fixed-cost optimization headroom"],
+        howto_vi: "Thanh bên trái chuyển đổi giữa 3 module → bộ lọc thời gian để drill-down → hover KPI để xem chi tiết thành phần.",
+        howto_en: "Left sidebar switches between 3 modules → time slicer for drill-down → hover KPIs to see component breakdowns.",
         tags: ["Power BI","Finance","DAX"],
+        thumb: "img_finance.png",
         url: "https://du-yt01.github.io/dashboard_finance/" },
       { title_vi: "Quản lý Kho & Công việc",
         title_en: "Inventory & Task Management",
         desc_vi: "Hệ thống theo dõi tồn kho, nhập xuất vật tư và quản lý khối lượng công việc theo thời gian thực.",
         desc_en: "Realtime inventory tracking, materials in/out, and workload management system.",
+        problem_vi: "Đội Ops đang theo dõi tồn kho và phân công công việc qua <strong>nhiều file Excel rời rạc</strong> — khó đối chiếu, dễ bỏ sót đơn, không có cái nhìn tổng thể về ai đang quá tải. Yêu cầu cốt lõi: tích hợp thành một hệ thống thời gian thực kết hợp <strong>theo dõi tồn kho + task board</strong> cho lãnh đạo.",
+        problem_en: "Ops team was tracking inventory & task assignment across <strong>scattered Excel files</strong> — hard to reconcile, easy to miss orders, no visibility on who's overloaded. High-level requirement: unify into one realtime system combining <strong>inventory tracking + task board</strong> for leaders' full view.",
+        insights_vi: ["Phát hiện SKU tồn kho quá lâu hoặc nhập nhiều xuất ít — giải phóng vốn lưu động","Cân bằng khối lượng công việc giữa các thành viên → tránh quá tải & bỏ lỡ deadline","Cảnh báo tự động khi tồn kho giảm dưới ngưỡng an toàn"],
+        insights_en: ["Spot SKUs sitting too long or high-inflow low-outflow items — free up working capital","Balance workload across members → avoid burnout & missed deadlines","Auto-alerts when inventory drops below safety threshold"],
+        howto_vi: "Lọc theo SKU/người → kiểm tra trạng thái từng đơn → click task để xem lịch sử thay đổi & người phụ trách hiện tại.",
+        howto_en: "Filter by SKU/person → check per-order status → click task for change history & current owner.",
         tags: ["Power BI","Inventory","Ops"],
+        thumb: "img_inventory.png",
         url: "https://du-yt01.github.io/demo_MM_Inventory/" },
       { title_vi: "Quản trị Ngân sách",
         title_en: "Budget Management",
         desc_vi: "Báo cáo giám sát chi phí, doanh thu và ngân sách theo từng dự án — hỗ trợ ra quyết định đầu tư.",
         desc_en: "Cost, revenue & budget monitoring per project — supporting investment decisions.",
+        problem_vi: "Ban lãnh đạo cần đánh giá <strong>hiệu quả từng dự án</strong> — chi phí thực tế so với ngân sách phê duyệt, doanh thu so với kỳ vọng — để quyết định tiếp tục đầu tư, mở rộng hay điều chỉnh hướng đi. Yêu cầu cốt lõi: dashboard so sánh <strong>Ngân sách vs Thực tế</strong> theo từng dự án với phân tích chênh lệch và xu hướng tháng.",
+        problem_en: "Leadership needed to assess <strong>per-project effectiveness</strong> — actual cost vs approved budget, revenue vs expectation — to decide whether to continue investing, expand scope, or pivot. High-level requirement: dashboard comparing <strong>Budget vs Actual</strong> per project with variance analysis and monthly trends.",
+        insights_vi: ["Dự án nào <strong>vượt ngân sách</strong> — cần xem xét phạm vi/tiến độ thực hiện ngay","Dự án nào có ROI cao nhất — nhân rộng mô hình cho các dự án tương tự","Xu hướng chi phí theo thời gian — dự báo vượt ngân sách trước khi chạm giới hạn"],
+        insights_en: ["Which projects are <strong>over budget</strong> — immediate scope/execution review needed","Which projects have highest ROI — replicate the model across similar ones","Cost trend over time — forecast overrun before hitting the cap"],
+        howto_vi: "Tổng quan danh mục → click từng dự án để drill-down chi tiết chi phí/doanh thu → so sánh nhiều dự án song song.",
+        howto_en: "Portfolio overview → click any project to drill-down cost/revenue detail → compare multiple projects side-by-side.",
         tags: ["Power BI","Budget","DAX"],
+        thumb: "img_budget.png",
         url: "https://du-yt01.github.io/Project_cost_revenue/" }
     ];
 
@@ -1421,11 +1535,16 @@
       card.className = 'report-card reveal';
       if (i % 3 !== 0) card.setAttribute('data-delay', String(i % 3));
       const hasUrl = !!r.url;
-      const frameHTML = hasUrl
+      const frameHTML = r.thumb
+        ? `<div class="report-thumb-badge" data-vi="LIVE" data-en="LIVE">LIVE</div>
+           <img src="${r.thumb}" alt="${r.title_vi}" loading="lazy">`
+        : hasUrl
         ? `<div class="report-thumb-badge" data-vi="LIVE" data-en="LIVE">LIVE</div>
            <iframe src="${r.url}" loading="lazy" referrerpolicy="no-referrer"></iframe>`
         : `<div class="ph-icon">📊</div>
            <div class="ph-text" data-vi="Báo cáo sẽ được nhúng ở đây<br>khi có URL" data-en="Report will be embedded here<br>once URL is provided">Báo cáo sẽ được nhúng ở đây<br>khi có URL</div>`;
+      const insightsHTML_vi = r.insights_vi.map(t => `<li>${t}</li>`).join('');
+      const insightsHTML_en = r.insights_en.map(t => `<li>${t}</li>`).join('');
 
       card.innerHTML = `
         <div class="report-frame-wrap ${hasUrl ? '' : 'placeholder'}">
@@ -1433,14 +1552,34 @@
         </div>
         <div class="report-body">
           <h3 data-vi="${r.title_vi.replace(/"/g,'&quot;')}" data-en="${r.title_en.replace(/"/g,'&quot;')}">${r.title_vi}</h3>
-          <p data-vi="${r.desc_vi.replace(/"/g,'&quot;')}" data-en="${r.desc_en.replace(/"/g,'&quot;')}">${r.desc_vi}</p>
-          <div class="report-tags">
-            ${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+          <p class="report-desc" data-vi="${r.desc_vi.replace(/"/g,'&quot;')}" data-en="${r.desc_en.replace(/"/g,'&quot;')}">${r.desc_vi}</p>
+
+          <div class="report-section">
+            <div class="report-section-head">
+              <span class="rs-ico">🎯</span>
+              <span class="rs-label" data-vi="VẤN ĐỀ & YÊU CẦU" data-en="PROBLEM & REQUIREMENT">VẤN ĐỀ & YÊU CẦU</span>
+            </div>
+            <p class="rs-text" data-vi="${r.problem_vi.replace(/"/g,'&quot;')}" data-en="${r.problem_en.replace(/"/g,'&quot;')}">${r.problem_vi}</p>
           </div>
-          ${hasUrl ? `<button class="report-cta" data-report-idx="${i}">
-            <span data-vi="Xem báo cáo đầy đủ" data-en="Open full report">Xem báo cáo đầy đủ</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>` : ''}
+
+          <div class="report-section">
+            <div class="report-section-head">
+              <span class="rs-ico">💡</span>
+              <span class="rs-label" data-vi="INSIGHT & CÁCH SỬ DỤNG" data-en="INSIGHT & HOW TO USE">INSIGHT & CÁCH SỬ DỤNG</span>
+            </div>
+            <ul class="rs-list" data-vi-list='${JSON.stringify(r.insights_vi)}' data-en-list='${JSON.stringify(r.insights_en)}'>${insightsHTML_vi}</ul>
+            <p class="rs-howto"><span class="rs-howto-label" data-vi="Cách dùng:" data-en="How to use:">Cách dùng:</span> <span class="rs-howto-text" data-vi="${r.howto_vi.replace(/"/g,'&quot;')}" data-en="${r.howto_en.replace(/"/g,'&quot;')}">${r.howto_vi}</span></p>
+          </div>
+
+          <div class="report-footer">
+            <div class="report-tags">
+              ${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+            ${hasUrl ? `<button class="report-cta" data-report-idx="${i}">
+              <span data-vi="Xem báo cáo đầy đủ" data-en="Open full report">Xem báo cáo đầy đủ</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>` : ''}
+          </div>
         </div>
       `;
       repGrid.appendChild(card);
